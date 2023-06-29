@@ -13,6 +13,8 @@ import Setting from './Components/Settings';
 function App() { // extends React.Component {
 
   const [incomplete, setIncomplete] = useState([]);
+  const [list, setList] = useState([]);
+
 
   return (
     <>
@@ -21,6 +23,8 @@ function App() { // extends React.Component {
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <Routes>
             <Route path="/" element={<Main
+              list={list}
+              setList={setList}
               incomplete={incomplete}
               setIncomplete={setIncomplete}
             />} />

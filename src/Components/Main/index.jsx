@@ -1,5 +1,5 @@
 import React from 'react'
-import { useState, useEffect, useContext } from 'react'
+import { useEffect, useContext } from 'react'
 import { SettingsContext } from '../../Context/Settings';
 import Todo from '../Todo';
 import List from '../List';
@@ -11,11 +11,10 @@ const SizeGrid = styled(Grid)`
 	width: 80%;
 `;
 
-function Main({ incomplete, setIncomplete, }) {
+function Main({ list, setList, incomplete, setIncomplete, }) {
 
 
-
-	const [list, setList] = useState([]);
+	// const [list, setList] = useState([]);
 
 	useEffect(() => {
 		let incompleteCount = list.filter(item => !item.complete).length;

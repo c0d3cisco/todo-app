@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Stack, Pagination } from '@mantine/core';
 import styled from '@emotion/styled'
+import { SettingsContext } from '../../Context/Settings';
 
 const SizedStack = styled(Stack)`
 	width: 60%;
@@ -8,14 +9,18 @@ const SizedStack = styled(Stack)`
 //! the width above is weird and should not be hard-coded like this
 
 function List({ hideState, list, setList }) {
+	const { settings } = useContext(SettingsContext);
 	const [activePage, setPage] = useState(1);
 	const [modifiedList, setModifiedList] = useState([]);
 
 	useEffect(() => {
+		console.log('hideState', settings?.hideState);
 		setModifiedList(
 			list
 				.reduce((accumulator, item) => {
-					if ((!item.complete || !hideState)) {
+					console.log('!item.complete', !item.complete);
+					console.log('!settings?.hideState', !settings?.hideState);
+					if ((!item.complete || !settings?.hideState)) {
 						const modifiedItem = (
 							<div key={item.id}>
 								<p>{item.text}</p>
