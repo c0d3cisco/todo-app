@@ -28,8 +28,6 @@ function App() { // extends React.Component {
               incomplete={incomplete}
               setIncomplete={setIncomplete}
             />} />
-          </Routes>
-          <Routes>
             <Route path="/settings" element={<Setting/>} />
           </Routes>
         </div>

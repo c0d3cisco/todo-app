@@ -30,7 +30,7 @@ function Main({ list, setList, incomplete, setIncomplete, }) {
 		<>
 			<h1 data-testid="todo-h1">To Do List: {incomplete} items pending</h1>
 			<SizeGrid>
-				<Grid.Col span="auto">
+				<Grid.Col span={4}>
 					<Todo
 						list={list}
 						setList={setList}
@@ -38,7 +38,7 @@ function Main({ list, setList, incomplete, setIncomplete, }) {
 						setIncomplete={setIncomplete}
 					/>
 				</Grid.Col>
-				<Grid.Col span="auto">
+				<Grid.Col span={8}>
 					<List
 						hideState={settings.hideState}
 						list={list}

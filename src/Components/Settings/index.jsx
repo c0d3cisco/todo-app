@@ -53,7 +53,7 @@ function Setting() {
 		<>
 			<h1>Settings</h1>
 			<SizeGrid>
-				<Grid.Col span="auto">
+				<Grid.Col span={6}>
 					<form className={classes.form}> 
 						<Flex
 							mih={50}
@@ -88,7 +88,7 @@ function Setting() {
 						</Flex>
 					</form>
 				</Grid.Col>
-				<Grid.Col span="auto">
+				<Grid.Col span={6}>
 				</Grid.Col>
 			</SizeGrid>
 		</>
