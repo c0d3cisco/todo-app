@@ -1,11 +1,16 @@
-import React from 'react'
+import { Link } from "react-router-dom"
 
-function Header({ incomplete }) {
+
+function Header() {
+
 	return (
-		<header data-testid="todo-header">
-			<h1 data-testid="todo-h1">To Do List: {incomplete} items pending</h1>
-		</header>
+		<div>
+
+			<Link to="/" default >Home</Link>
+			<Link to="/settings">Settings</Link>
+		</div>
 	)
 }
+
 
 export default Header

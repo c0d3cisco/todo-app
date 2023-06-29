@@ -35,7 +35,7 @@ const Todo = ({ list, setList, incomplete, setIncomplete }) => {
 
   return (
     // <>
-    <form className={classes.h6} onSubmit={handleSubmit}>
+    <form className={classes.form} onSubmit={handleSubmit}>
       <Flex
         mih={50}
         bg="rgba(0, 0, 0, .3)"
@@ -46,15 +46,15 @@ const Todo = ({ list, setList, incomplete, setIncomplete }) => {
         wrap="wrap"
       >
         <h2>Add To Do Item</h2>
-        <label style={{ display: 'flex', flexDirection: 'column' }}>
+        <label className={classes.formLabel}>
           <span>To Do Item</span>
           <input onChange={handleChange} name="text" type="text" placeholder="Item Details" />
         </label>
-        <label style={{ display: 'flex', flexDirection: 'column' }}>
+        <label className={classes.formLabel}>
           <span>Assigned To</span>
           <input onChange={handleChange} name="assignee" type="text" placeholder="Assignee Name" />
         </label>
-        <label style={{ display: 'flex', flexDirection: 'column' }}>
+        <label className={classes.formLabel}>
           <span>Difficulty</span>
           <input onChange={handleChange} defaultValue={defaultValues.difficulty} type="range" min={1} max={5} name="difficulty" />
         </label>
