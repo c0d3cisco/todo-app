@@ -4,15 +4,11 @@ import { SettingsContext } from '../../Context/Settings';
 import Todo from '../Todo';
 import List from '../List';
 import { Grid } from '@mantine/core';
-import styled from '@emotion/styled';
-// import { useStyles } from '../../style.js';
-
-const SizeGrid = styled(Grid)`
-	width: 80%;
-`;
+import { useStyles } from '../../style';
 
 function Main({ list, setList, incomplete, setIncomplete, }) {
 
+	const { classes } = useStyles();
 
 	// const [list, setList] = useState([]);
 
@@ -28,8 +24,8 @@ function Main({ list, setList, incomplete, setIncomplete, }) {
 
 	return (
 		<>
-			<h1 data-testid="todo-h1">To Do List: {incomplete} items pending</h1>
-			<SizeGrid>
+			<h1 className={classes.mainHeader}>To Do List: {incomplete} items pending</h1>
+			<Grid className={classes.mainContent}>
 				<Grid.Col span={4}>
 					<Todo
 						list={list}
@@ -40,12 +36,12 @@ function Main({ list, setList, incomplete, setIncomplete, }) {
 				</Grid.Col>
 				<Grid.Col span={8}>
 					<List
-						hideState={settings.hideState}
+						showState={settings.showState}
 						list={list}
 						setList={setList}
 					/>
 				</Grid.Col>
-			</SizeGrid>
+			</Grid>
 		</>
 	)
 }

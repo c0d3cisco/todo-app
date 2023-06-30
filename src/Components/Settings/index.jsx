@@ -1,63 +1,50 @@
-import React, { useEffect, useState, useContext } from 'react'
-import styled from '@emotion/styled';
+import React, { useEffect, useContext, useState } from 'react'
 import { useStyles } from '../../style';
-import { Grid, Flex, TextInput, Button, Switch, NumberInput } from '@mantine/core';
+import { Grid, Flex, TextInput, Button, Switch, NumberInput, Card, Text, Select } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { SettingsContext } from '../../Context/Settings';
-
-let show;
-const SizeGrid = styled(Grid)`
-	width: 80%;
-`;
+import { IconSettings } from '@tabler/icons-react';
 
 function Setting() {
-	const { settings } = useContext(SettingsContext);
-	let initialValues = settings;
-	const [i, setI] = useState(0);
-	const [formValues, setFormValues] = useState(initialValues)
+
+	const { settings, setSettings, saveLocally } = useContext(SettingsContext);
+	const { showState, pageCount, sortBy } = settings;
+	const [showSetting, setShowSetting] = useState(false);
+
+	const { classes } = useStyles();
 
 	const form = useForm({
 		initialValues: settings,
 	})
 
-	const { classes } = useStyles();
-
-	useEffect(() => {
-		console.log('TEST', form.values);
-	})
-
-	useEffect(() => {
-		// console.log(i);
-		if(i){
-		const myJSON = JSON.stringify(form.values);
-		localStorage.setItem("settingsToDoApp", myJSON);
-		// console.log('DATA STORED', form.values)
-		} 
-		else {
-		// 	const data = localStorage.getItem("settingsToDoApp");
-		// 	const myJSON = JSON.parse(data);
-		// 	setFormValues(myJSON);
-			setI(i + 1)}
-		// }
-		})
-	
-	const setSettings = (e, propertyName) => {
+	const setSettingsForm = (e, propertyName) => {
 		console.log(e)
-		form.setValues({
-			...form?.values,
-			[propertyName]:  e,
-		})
+		let settingsLocal = {
+			...settings,
+			[propertyName]: e,
+		}
+		form.setValues(settingsLocal);
+		setSettings(settingsLocal);
 	}
+
+	const handleSubmit = (e) => {
+		e.preventDefault();
+		setShowSetting(!showSetting);
+	}
+
+	useEffect(() => {
+		console.log('showState', showSetting);
+		saveLocally();
+	})
 
 	return (
 		<>
-			<h1>Settings</h1>
-			<SizeGrid>
+			<h1 className={classes.mainHeader}><IconSettings />Manage Settings</h1>
+			<Grid className={classes.mainContent}>
 				<Grid.Col span={6}>
-					<form className={classes.form}> 
+					<form className={classes.form} onSubmit={handleSubmit}>
 						<Flex
 							mih={50}
-							bg="rgba(0, 0, 0, .3)"
 							gap="md"
 							justify="flex-start"
 							align="center"
@@ -66,37 +53,52 @@ function Setting() {
 						>
 							<h2 className={classes.formLabel} >Update Settings</h2>
 							<Switch
-								onChange={(e) => setSettings(e.target.checked, 'hideState')}
+								onChange={(e) => setSettingsForm(e.target.checked, 'showState')}
 								label="Show Completed ToDos"
-								name='completeStatus'
-								checked={form.values?.hideState}
+								checked={form.values?.showState}
 							/>
 							<NumberInput
-								onChange={(e) => setSettings(e, 'pageCount')}
+								onChange={(e) => setSettingsForm(e, 'pageCount')}
 								value={form.values?.pageCount}
 								placeholder="3"
 								label="Items Per page"
-								name='itemsPerPage'
 							/>
-							<TextInput
-								onChange={(e) => setSettings(e.target.value, 'sortBy')}
-								value={form.values?.sortBy}
+							<Select
 								label="Sort Keyword"
-								name='sortKeyWord'
+								onChange={(e) => setSettingsForm(e, 'sortBy')}
+								placeholder={form.values?.sortBy}
+								searchable
+								nothingFound="No options"
+								maxDropdownHeight={280}
+								data={['difficulty', 'submitted']}
 							/>
-							<Button>Show New Settings</Button>
+							<Button type="submit">Show New Settings</Button>
 						</Flex>
 					</form>
 				</Grid.Col>
 				<Grid.Col span={6}>
+					{showSetting &&
+						<Card shadow="sm" padding="lg" radius="md" withBorder>
+							<Card.Section>
+								<Flex
+									mih={50}
+									bg="rgba(0, 0, 0, .3)"
+									gap="md"
+									justify="flex-start"
+									align="center"
+									direction="column"
+									wrap="wrap" >
+									<h2>Updated Settings</h2>
+									<Text size="md">Show Completed ToDos: {showState ? "True" : "False"}</Text>
+									<Text size="md">Items Per page: {pageCount}</Text>
+									<Text size="md">Sort Keyword: {sortBy}</Text>
+								</Flex>
+							</Card.Section>
+						</Card>}
 				</Grid.Col>
-			</SizeGrid>
+			</Grid>
 		</>
 	)
-}
-
-function handleChange() {
-
 }
 
 export default Setting

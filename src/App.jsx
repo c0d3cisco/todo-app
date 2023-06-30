@@ -9,18 +9,21 @@ import {
   Route
 } from "react-router-dom";
 import Setting from './Components/Settings';
+import { useStyles } from './style';
 
 function App() { // extends React.Component {
 
   const [incomplete, setIncomplete] = useState([]);
   const [list, setList] = useState([]);
 
+  const { classes } = useStyles();
+
 
   return (
     <>
       <Router>
         <Header />
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <div className={classes.mainElement}>
           <Routes>
             <Route path="/" element={<Main
               list={list}

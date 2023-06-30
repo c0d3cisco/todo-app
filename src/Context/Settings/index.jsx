@@ -1,21 +1,35 @@
-import { useState, createContext, useContext } from "react"
+import { useState, createContext, useEffect } from "react"
 
 export const SettingsContext = createContext()
 
-
 export function SettingsManager(props) {
 	const localStorageSettings = JSON.parse(localStorage.getItem('settingsToDoApp'));
-	console.log('TESTEST', localStorageSettings);
 
 const [settings, setSettings] = useState(localStorageSettings || {
-		hideState: true,
+		showState: true,
 		pageCount: 3,
 		sortBy: "difficulty",
 	});
 
+	const saveLocally = () => {
+		console.log('settings', settings);
+    localStorage.setItem(
+      'settingsToDoApp', 
+      JSON.stringify(settings)
+      );
+  }
+
+	useEffect(() => {
+		let storage = JSON.parse(localStorage.getItem('settingsToDoApp'))
+		if(storage){
+			setSettings(storage);
+		}
+	},[]) 
+
 	const value = {
 		settings,
-		setSettings
+		setSettings,
+		saveLocally
 	}
 
 	return (
@@ -24,8 +38,3 @@ const [settings, setSettings] = useState(localStorageSettings || {
 		</SettingsContext.Provider>
 	)
 }
-
-export function useSettings() {
-	return useContext(SettingsContext);
-}
-

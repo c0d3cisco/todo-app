@@ -1,64 +1,79 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Stack, Pagination } from '@mantine/core';
-import styled from '@emotion/styled'
+import { Card, Flex, Pagination, Group, Text, Badge } from '@mantine/core';
 import { SettingsContext } from '../../Context/Settings';
 
-const SizedStack = styled(Stack)`
-	width: 60%;
-`;
-//! the width above is weird and should not be hard-coded like this
 
-function List({ hideState, list, setList }) {
-	const { settings } = useContext(SettingsContext);
-	const [activePage, setPage] = useState(1);
-	const [modifiedList, setModifiedList] = useState([]);
+function List({ list, setList }) {
+  const { settings } = useContext(SettingsContext);
+  const { showState, pageCount, sortBy } = settings;
+  const [activePage, setPage] = useState(1);
 
-	useEffect(() => {
-		console.log('hideState', settings?.hideState);
-		setModifiedList(
-			list
-				.reduce((accumulator, item) => {
-					console.log('!item.complete', !item.complete);
-					console.log('!settings?.hideState', !settings?.hideState);
-					if ((!item.complete || !settings?.hideState)) {
-						const modifiedItem = (
-							<div key={item.id}>
-								<p>{item.text}</p>
-								<p><small>Assigned to: {item.assignee}</small></p>
-								<p><small>Difficulty: {item.difficulty}</small></p>
-								<div onClick={() => toggleComplete(item.id)}>Complete: {item.complete ? 'true' : 'false'}</div>
-								<hr />
-							</div>
-						);
-						accumulator.push(modifiedItem);
-					}
-					return accumulator;
-				}, [])
-		)
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [list]);
+  useEffect(() => {
+    console.log('showState', showState);
+  }, [showState]);
 
-	function toggleComplete(id) {
+  function toggleComplete(id) {
+    const updatedList = list.map((item) => {
+      if (item.id === id) {
+        return { ...item, complete: !item.complete };
+      }
+      return item;
+    });
+    setList(updatedList);
+  }
 
-		const items = list.map(item => {
-			if (item.id === id) {
-				item.complete = !item.complete; // boolean switch
-			}
-			return item;
-		});
-		setList(items);
-		setModifiedList([...modifiedList]);
+	switch (sortBy) {
+		case 'difficulty':
+			list = list.sort((a, b) =>  a.difficulty - b.difficulty);
+			break;
+		case 'submitted':
+			list = list.sort((a, b) =>  a.time - b.time);
+			break;
+		default:
+			break;
 	}
 
-	return (
-		<SizedStack spacing="xs" h={300} sx={(theme) => ({ backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0] })}>
-			{modifiedList.filter((item, idx) => idx >= (activePage - 1) * 3 && idx < activePage * 3)}
-			<Pagination
-				value={activePage}
-				onChange={setPage}
-				total={Math.ceil(modifiedList.length / 3) || 1} />
-		</SizedStack>
-	)
+  const modifiedList = list.reduce((accumulator, item) => {
+    if (!item.complete || showState) {
+      const modifiedItem = (
+        <div key={item.id} style={{width: '100%'}}>
+          <Card shadow="sm" padding="lg" radius="sm" withBorder>
+            <Card.Section style={{padding: '4px'}}>
+              <Flex align="center" style={{borderBottom:'1px lightgray solid'}}>
+                <Badge
+                  color={item.complete ? 'red' : 'green'}
+                  onClick={() => toggleComplete(item.id)}
+                >
+                  {item.complete ? 'Completed' : 'Pending'}
+                </Badge>
+                <Text style={{paddingLeft: '1.5em'}} size="md">{item.assignee}</Text>
+              </Flex>
+            </Card.Section>
+						<Card.Section style={{position: 'relative', padding: '16px'}}>
+              <Text weight={400}>{item.text}</Text>
+              <small style={{fontSize:'0.7em', position: 'absolute', padding: '8px', paddingRight: '1em', bottom: '0', right: '0'}}>Difficulty: {item.difficulty}</small>
+						</Card.Section>
+          </Card>
+        </div>
+      );
+      accumulator.push(modifiedItem);
+    }
+    return accumulator;
+  }, []);
+
+
+  const paginatedList = modifiedList.slice((activePage - 1) * pageCount, activePage * pageCount);
+
+  return (
+    <Flex mih={50} gap="xs" align="flex-start" justify="center" direction="column" wrap="wrap">
+      {paginatedList}
+      <Pagination
+        value={activePage}
+        onChange={setPage}
+        total={Math.ceil(modifiedList.length / pageCount) || 1}
+      />
+    </Flex>
+  );
 }
 
-export default List
+export default List;
