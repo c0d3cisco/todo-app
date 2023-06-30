@@ -5,12 +5,11 @@ import Todo from '../Todo';
 import List from '../List';
 import { Grid } from '@mantine/core';
 import { useStyles } from '../../style';
+import Auth from '../Auth';
 
 function Main({ list, setList, incomplete, setIncomplete, }) {
 
 	const { classes } = useStyles();
-
-	// const [list, setList] = useState([]);
 
 	useEffect(() => {
 		let incompleteCount = list.filter(item => !item.complete).length;
@@ -26,7 +25,8 @@ function Main({ list, setList, incomplete, setIncomplete, }) {
 		<>
 			<h1 className={classes.mainHeader}>To Do List: {incomplete} items pending</h1>
 			<Grid className={classes.mainContent}>
-				<Grid.Col span={4}>
+				<Auth capability="create">
+				<Grid.Col sm={4}>
 					<Todo
 						list={list}
 						setList={setList}
@@ -34,7 +34,8 @@ function Main({ list, setList, incomplete, setIncomplete, }) {
 						setIncomplete={setIncomplete}
 					/>
 				</Grid.Col>
-				<Grid.Col span={8}>
+				</Auth>
+				<Grid.Col sm="auto">
 					<List
 						showState={settings.showState}
 						list={list}

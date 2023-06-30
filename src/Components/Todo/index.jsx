@@ -22,15 +22,6 @@ const Todo = ({ list, setList, incomplete, setIncomplete }) => {
     setList([...list, item]);
   }
 
-  // function deleteItem(id) {
-  //   const items = list.filter( item => item.id !== id );
-  //   setList(items);
-  // }
-
-
-
-
-
   return (
     // <>
     <form className={classes.form} onSubmit={handleSubmit}>

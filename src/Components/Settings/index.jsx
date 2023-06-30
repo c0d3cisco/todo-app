@@ -42,6 +42,7 @@ function Setting() {
 			<h1 className={classes.mainHeader}><IconSettings />Manage Settings</h1>
 			<Grid className={classes.mainContent}>
 				<Grid.Col span={6}>
+						<Card shadow="sm" padding="lg" radius="md" withBorder>
 					<form className={classes.form} onSubmit={handleSubmit}>
 						<Flex
 							mih={50}
@@ -75,6 +76,7 @@ function Setting() {
 							<Button type="submit">Show New Settings</Button>
 						</Flex>
 					</form>
+					</Card>
 				</Grid.Col>
 				<Grid.Col span={6}>
 					{showSetting &&
@@ -82,16 +84,15 @@ function Setting() {
 							<Card.Section>
 								<Flex
 									mih={50}
-									bg="rgba(0, 0, 0, .3)"
 									gap="md"
 									justify="flex-start"
 									align="center"
 									direction="column"
 									wrap="wrap" >
-									<h2>Updated Settings</h2>
-									<Text size="md">Show Completed ToDos: {showState ? "True" : "False"}</Text>
-									<Text size="md">Items Per page: {pageCount}</Text>
-									<Text size="md">Sort Keyword: {sortBy}</Text>
+									<Text m="sm" size="xl">Updated Settings</Text>
+									<Text m="sm" size="md">Show Completed ToDos: {showState ? "True" : "False"}</Text>
+									<Text m="sm" size="md">Items Per page: {pageCount}</Text>
+									<Text m="sm" size="md">Sort Keyword: {sortBy}</Text>
 								</Flex>
 							</Card.Section>
 						</Card>}

@@ -11,6 +11,24 @@ export const useStyles = createStyles((theme) => ({
 		display: 'flex',
 		flexDirection: 'column',
 	},
+	navbar: {
+		backgroundColor: theme.colors.blue[7],
+		height: '100%',
+		padding: theme.spacing.md,
+	},
+	link: {
+		color: theme.colors.gray[0],
+		fontSize: theme.fontSizes.sm,
+		paddingRight: theme.spacing.md,
+		fontFamily: 'Verdana, sans-serif',
+		textDecoration: 'none',
+	},
+	logInForm: {
+		display: 'flex',
+		flexDirection: 'row',
+		justifyContent: 'flex-end',
+		alignItems: 'center',
+	},
 	mainHeader: {
 		backgroundColor: theme.colors.gray[8],
     color: theme.colors.gray[0],
@@ -39,5 +57,16 @@ export const useStyles = createStyles((theme) => ({
 		margin: 'auto',
 		textAlign: 'end'
 	},
+	loginInput: {
+		width: '90%',
+		margin: 'auto',
+		paddingRight: theme.spacing.sm,
+	},
+	loginButton: {
+		width: '90%',
+		margin: 'auto',
+		marginTop: theme.spacing.md,
+	},
+
 
 }));

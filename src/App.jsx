@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useState } from 'react';
 import Footer from './Components/Footer';
 import Header from './Components/Header';
@@ -10,6 +10,8 @@ import {
 } from "react-router-dom";
 import Setting from './Components/Settings';
 import { useStyles } from './style';
+import { AuthContext } from './Context/Auth';
+import Auth from './Components/Auth';
 
 function App() { // extends React.Component {
 
@@ -17,12 +19,14 @@ function App() { // extends React.Component {
   const [list, setList] = useState([]);
 
   const { classes } = useStyles();
+  const { isLoggedIn } = useContext(AuthContext);
 
 
   return (
     <>
       <Router>
         <Header />
+          <Auth capability="read">
         <div className={classes.mainElement}>
           <Routes>
             <Route path="/" element={<Main
@@ -34,6 +38,7 @@ function App() { // extends React.Component {
             <Route path="/settings" element={<Setting/>} />
           </Routes>
         </div>
+        </Auth>
         <Footer />
       </Router>
     </>
