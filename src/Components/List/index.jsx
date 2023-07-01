@@ -48,6 +48,7 @@ function List({ list, setList }) {
 							<Grid align="center" style={{ borderBottom: '1px lightgray solid' }}>
 								<Grid.Col span={2}>
 									<Badge
+										variant='filled'
 										color={item.complete ? 'red' : 'green'}
 										onClick={() => toggleComplete(item.id)}
 									>
@@ -66,7 +67,7 @@ function List({ list, setList }) {
 						</Card.Section>
 						<Card.Section style={{ position: 'relative', padding: '16px' }}>
 							<Text weight={400}>{item.text}</Text>
-							<small style={{ fontSize: '0.7em', position: 'absolute', padding: '8px', paddingRight: '1em', bottom: '0', right: '0' }}>Difficulty: {item.difficulty}</small>
+							<Text size={16} align='right'><small> Difficulty: {item.difficulty} </small></Text>
 						</Card.Section>
 					</Card>
 				</div>
