@@ -1,8 +1,7 @@
 import { useEffect, useState, createContext } from 'react';
-import testUsers from './lib/user';
 import jwt_decode from "jwt-decode";
 import cookie from 'react-cookies'
-
+import axios from 'axios';
 export const AuthContext = createContext();
 
 function AuthProvider({ children }){
@@ -15,9 +14,16 @@ function AuthProvider({ children }){
     validateToken(cookieToken);
   }, []);
 
-  const login = (username, password) => {
-    let user = testUsers[username];
-    if (user && user.password === password){
+  const login = async (username, password) => {
+    let payLoad = {
+      baseURL: 'https://api-js401.herokuapp.com',
+      url: '/signin',
+      method: 'post',
+      auth: {username, password}
+    }
+    let response = await axios(payLoad);
+    let user = response.data;
+    if (user){
       try {
         validateToken(user.token)
       } catch(err){
@@ -30,7 +36,6 @@ function AuthProvider({ children }){
   const validateToken = (token) => {
     try {
       let validUser = jwt_decode(token);
-      console.log('validUser', validUser);
       if (validUser){
         cookie.save('auth', token);
         setUser(validUser);
