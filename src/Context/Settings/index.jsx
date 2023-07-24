@@ -1,4 +1,4 @@
-import { useState, createContext, useEffect } from "react"
+import { useState, createContext, useEffect, useContext } from "react"
 
 export const SettingsContext = createContext()
 
@@ -9,10 +9,10 @@ const [settings, setSettings] = useState(localStorageSettings || {
 		showState: true,
 		pageCount: 3,
 		sortBy: "difficulty",
+		localMemory: true, 
 	});
 
 	const saveLocally = () => {
-		console.log('settings', settings);
     localStorage.setItem(
       'settingsToDoApp', 
       JSON.stringify(settings)
@@ -26,10 +26,19 @@ const [settings, setSettings] = useState(localStorageSettings || {
 		}
 	},[]) 
 
+	const handleNavCSS = (theme) => {
+		if(settings.localMemory){
+			return theme.colors.blue[7]
+		} else {
+			return theme.colors.green[7]
+		}
+	}
+
 	const value = {
 		settings,
 		setSettings,
-		saveLocally
+		saveLocally,
+		handleNavCSS
 	}
 
 	return (
@@ -37,4 +46,8 @@ const [settings, setSettings] = useState(localStorageSettings || {
 			{props.children}
 		</SettingsContext.Provider>
 	)
+}
+
+export function useSettings() {
+  return useContext(SettingsContext);
 }

@@ -7,7 +7,7 @@ import { Grid } from '@mantine/core';
 import { useStyles } from '../../style';
 import Auth from '../Auth';
 
-function Main({ list, setList, incomplete, setIncomplete, }) {
+function Main({ list, setList, incomplete, setIncomplete}) {
 
 	const { classes } = useStyles();
 

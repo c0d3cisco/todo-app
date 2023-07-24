@@ -2,30 +2,57 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Card, Flex, Pagination, Grid, Text, Badge, CloseButton } from '@mantine/core';
 import { SettingsContext } from '../../Context/Settings';
 import Auth from '../Auth';
+import { AuthContext } from '../../Context/Auth';
+import axios from 'axios';
 
 
 function List({ list, setList }) {
 	const { settings } = useContext(SettingsContext);
-	const { showState, pageCount, sortBy } = settings;
+	const { can } = useContext(AuthContext);
+	const { showState, pageCount, sortBy, localMemory } = settings;
 	const [activePage, setPage] = useState(1);
 
 	useEffect(() => {
-		console.log('showState', showState);
 	}, [showState]);
 
-	function toggleComplete(id) {
-		const updatedList = list.map((item) => {
-			if (item.id === id) {
-				return { ...item, complete: !item.complete };
-			}
-			return item;
-		});
-		setList(updatedList);
+	function toggleComplete(_id, complete) {
+		if (!localMemory) {
+			let obj = { _id, complete }
+			axios.put(`https://api-js401.herokuapp.com/api/v1/todo/${_id}`, obj)
+				.then();
+			const updatedList = list.map((item) => {
+				if (item._id === _id) {
+					return { ...item, complete: !item.complete };
+				}
+				return item;
+			});
+			setList(updatedList);
+		} else {
+			const updatedList = list.map((item) => {
+				if (item._id === _id) {
+					return { ...item, complete: !item.complete };
+				}
+				return item;
+			});
+			let stringifiedList = JSON.stringify(updatedList);
+			localStorage.setItem('list', stringifiedList);
+			setList(updatedList);
+		}
 	}
 
 	function deleteItem(id) {
-		const items = list.filter(item => item.id !== id);
-		setList(items);
+		if (!localMemory) {
+			axios.delete(`https://api-js401.herokuapp.com/api/v1/todo/${id}`)
+				.then(response => {
+					const items = list.filter(item => item._id !== id);
+					setList(items);
+				})
+		} else {
+			const items = list.filter(item => item._id !== id);
+			let stringifiedList = JSON.stringify(items);
+			localStorage.setItem('list', stringifiedList);
+			setList(items);
+		}
 	}
 
 	switch (sortBy) {
@@ -42,7 +69,7 @@ function List({ list, setList }) {
 	const modifiedList = list.reduce((accumulator, item) => {
 		if (!item.complete || showState) {
 			const modifiedItem = (
-				<div key={item.id} style={{ width: '100%' }}>
+				<div key={item._id} style={{ width: '100%' }}>
 					<Card shadow="sm" padding="lg" radius="sm" withBorder>
 						<Card.Section style={{ padding: '4px' }}>
 							<Grid align="center" style={{ borderBottom: '1px lightgray solid' }}>
@@ -50,7 +77,7 @@ function List({ list, setList }) {
 									<Badge
 										variant='filled'
 										color={item.complete ? 'red' : 'green'}
-										onClick={() => toggleComplete(item.id)}
+										onClick={() => can('update') ? toggleComplete(item._id, !item.complete) : console.log('nope')}
 									>
 										{item.complete ? 'Completed' : 'Pending'}
 									</Badge>
@@ -59,9 +86,9 @@ function List({ list, setList }) {
 									<Text style={{ paddingLeft: '1.5em' }} size="md">{item.assignee}</Text>
 								</Grid.Col>
 								<Auth capability="delete">
-								<Grid.Col span={1} offset={8}>
-									<CloseButton variant='subtle' onClick={() => deleteItem(item.id)} title="Delete Item" size="sm" />
-								</Grid.Col>
+									<Grid.Col span={1} offset={8}>
+										<CloseButton variant='subtle' onClick={() => deleteItem(item._id)} title="Delete Item" size="sm" />
+									</Grid.Col>
 								</Auth>
 							</Grid>
 						</Card.Section>

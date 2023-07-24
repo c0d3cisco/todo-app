@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import useForm from '../../hooks/form';
 import { Button, Flex, Slider } from '@mantine/core';
 import { useStyles } from '../../style';
 import { v4 as uuid } from 'uuid';
+import { SettingsContext } from '../../Context/Settings';
+import axios from 'axios';
 
 const Todo = ({ list, setList, incomplete, setIncomplete }) => {
+  const { settings } = useContext(SettingsContext);
 
   const { classes } = useStyles();
 
@@ -14,12 +17,19 @@ const Todo = ({ list, setList, incomplete, setIncomplete }) => {
 
   const { handleChange, handleSubmit } = useForm(addItem, defaultValues);
 
-  function addItem(item) {
-    item.id = uuid();
+  async function addItem(item) {
     item.complete = false;
     item.time = new Date();
-    console.log(item);
-    setList([...list, item]);
+    if (!settings.localMemory) {
+      await axios.post('https://api-js401.herokuapp.com/api/v1/todo', item)
+      const item1 = await axios.get('https://api-js401.herokuapp.com/api/v1/todo');
+      setList(item1.data.results);
+    } else {
+      item._id = uuid();
+      let stringifiedList = JSON.stringify([...list, item]);
+			localStorage.setItem('list', stringifiedList);
+      setList([...list, item]);
+    }
   }
 
   return (

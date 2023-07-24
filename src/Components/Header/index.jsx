@@ -1,12 +1,12 @@
 import { Link } from "react-router-dom"
-import { Button, createStyles, Grid, Input, PasswordInput } from '@mantine/core';
+import { Grid } from '@mantine/core';
 import { useStyles } from '../../style';
 import Login from "../Login";
 
 
 
 function Header() {
-	const { classes } = useStyles();
+	const { classes } = useStyles(); //? would something like useStyles('dark')
 
 	return (
 		<Grid className={classes.navbar}>
