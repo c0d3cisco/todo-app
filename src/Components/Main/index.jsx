@@ -1,15 +1,15 @@
 import React from 'react'
-import { useState, useEffect, useContext } from 'react'
+import { useEffect, useContext } from 'react'
 import { SettingsContext } from '../../Context/Settings';
 import Todo from '../Todo';
 import List from '../List';
-import { Group } from '@mantine/core';
+import { Grid } from '@mantine/core';
+import { useStyles } from '../../style';
+import Auth from '../Auth';
 
-// import { useStyles } from '../../style.js';
+function Main({ list, setList, incomplete, setIncomplete, }) {
 
-function Main({ incomplete, setIncomplete, }) {
-
-	const [list, setList] = useState([]);
+	const { classes } = useStyles();
 
 	useEffect(() => {
 		let incompleteCount = list.filter(item => !item.complete).length;
@@ -18,23 +18,32 @@ function Main({ incomplete, setIncomplete, }) {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [list]);
 
-	const { hideState } = useContext(SettingsContext);
+	const { settings } = useContext(SettingsContext);
 
 
 	return (
-			<Group position="center" spacing="sm">
-				<Todo
-					list={list}
-					setList={setList}
-					incomplete={incomplete}
-					setIncomplete={setIncomplete}
-				/>
-				<List
-					hideState={hideState}
-					list={list}
-					setList={setList}
-				/>
-			</Group>
+		<>
+			<h1 className={classes.mainHeader}>To Do List: {incomplete} items pending</h1>
+			<Grid className={classes.mainContent}>
+				<Auth capability="create">
+				<Grid.Col sm={4}>
+					<Todo
+						list={list}
+						setList={setList}
+						incomplete={incomplete}
+						setIncomplete={setIncomplete}
+					/>
+				</Grid.Col>
+				</Auth>
+				<Grid.Col sm="auto">
+					<List
+						showState={settings.showState}
+						list={list}
+						setList={setList}
+					/>
+				</Grid.Col>
+			</Grid>
+		</>
 	)
 }
 

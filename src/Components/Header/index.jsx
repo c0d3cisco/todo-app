@@ -1,11 +1,25 @@
-import React from 'react'
+import { Link } from "react-router-dom"
+import { Button, createStyles, Grid, Input, PasswordInput } from '@mantine/core';
+import { useStyles } from '../../style';
+import Login from "../Login";
 
-function Header({ incomplete }) {
+
+
+function Header() {
+	const { classes } = useStyles();
+
 	return (
-		<header data-testid="todo-header">
-			<h1 data-testid="todo-h1">To Do List: {incomplete} items pending</h1>
-		</header>
+		<Grid className={classes.navbar}>
+			<Grid.Col span={3}>
+				<Link className={classes.link} to="/" default >Home</Link>
+				<Link className={classes.link} to="/settings">Settings</Link>
+			</Grid.Col>
+			<Grid.Col className={classes.logInForm} offset={3} span={6}>
+				<Login />
+			</Grid.Col>
+		</Grid>
 	)
 }
+
 
 export default Header

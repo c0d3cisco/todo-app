@@ -1,27 +1,40 @@
-import React, { useState } from "react"
+import { useState, createContext, useEffect } from "react"
 
-export const SettingsContext = React.createContext()
+export const SettingsContext = createContext()
 
-function SettingsManager(props) {
-	const [hideState] = useState(false);
-	const [pageCount] = useState(3);
-	const [sortBy] = useState("difficulty")
+export function SettingsManager(props) {
+	const localStorageSettings = JSON.parse(localStorage.getItem('settingsToDoApp'));
 
-	const state = {
-		hideState,
-		pageCount,
-		sortBy,
-		// sortField,
-		// setHideState,
-		// setPageCount,
-		// setSortField,
+const [settings, setSettings] = useState(localStorageSettings || {
+		showState: true,
+		pageCount: 3,
+		sortBy: "difficulty",
+	});
+
+	const saveLocally = () => {
+		console.log('settings', settings);
+    localStorage.setItem(
+      'settingsToDoApp', 
+      JSON.stringify(settings)
+      );
+  }
+
+	useEffect(() => {
+		let storage = JSON.parse(localStorage.getItem('settingsToDoApp'))
+		if(storage){
+			setSettings(storage);
+		}
+	},[]) 
+
+	const value = {
+		settings,
+		setSettings,
+		saveLocally
 	}
 
 	return (
-		<SettingsContext.Provider value={state}>
+		<SettingsContext.Provider value={value}>
 			{props.children}
 		</SettingsContext.Provider>
 	)
 }
-
-export default SettingsManager;
